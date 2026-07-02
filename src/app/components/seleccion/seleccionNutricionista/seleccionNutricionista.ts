@@ -78,7 +78,14 @@ export class SeleccionNutricionistaComponent implements OnInit {
   cargarNutricionistas(): void {
     this.http.get<Nutricionista[]>(`${environment.apiUrl}/api/nutricionistas`).subscribe({
       next: (data) => {
-        this.nutricionistas = data;
+        // Recorremos el arreglo de nutricionistas y construimos la URL de la foto igual que en el Header
+        this.nutricionistas = data.map(nutricionista => {
+          return {
+            ...nutricionista,
+            // Sobrescribimos fotoUrl con la ruta dinámica que ya te funciona
+            fotoUrl: `${environment.apiUrl}/api/usuarios/foto/${nutricionista.id}?t=${Date.now()}`
+          };
+        });
       },
       error: (err) => console.error('Error al cargar nutricionistas:', err)
     });

@@ -57,7 +57,14 @@ export class SeleccionEntrenadorComponent implements OnInit {
     // Apunta dinámicamente a http://localhost:8089 según tu environment.development.ts
     this.http.get<Entrenador[]>(`${environment.apiUrl}/api/entrenadores`).subscribe({
       next: (data) => {
-        this.entrenadores = data;
+        // Recorremos el arreglo y aplicamos EXACTAMENTE la misma lógica del header a cada entrenador
+        this.entrenadores = data.map(entrenador => {
+          return {
+            ...entrenador,
+            // Sobrescribimos fotoUrl con la misma ruta y parámetro de tiempo (para evitar caché) que usa el header
+            fotoUrl: `${environment.apiUrl}/api/usuarios/foto/${entrenador.id}?t=${Date.now()}`
+          };
+        });
       },
       error: (err) => console.error('Error al cargar entrenadores:', err)
     });
