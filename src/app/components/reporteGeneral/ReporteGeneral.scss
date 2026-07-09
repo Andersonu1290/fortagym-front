@@ -1,0 +1,880 @@
+// ============================================================
+//  FORTAGYM — ReporteGeneral SCSS
+//  Variables heredadas de styles.css (--color-forta-primary, etc.)
+// ============================================================
+
+// ── Tokens locales (mapean al design system global) ──────────
+$primary:      var(--color-forta-primary);       // #ff8d22
+$primary-hex:  #ff8d22;
+$dark:         var(--color-forta-dark);          // #111111
+$dark-hex:     #111111;
+$bg-page:      #f4f6f8;
+$bg-card:      #ffffff;
+$border:       #e2e8f0;
+$text-main:    #111111;
+$text-muted:   #64748b;
+$text-light:   #94a3b8;
+$font-title:   var(--font-title);
+$font-body:    var(--font-body);
+
+$radius-card:  16px;
+$radius-sm:    8px;
+$shadow-card:  0 4px 20px rgba(0, 0, 0, 0.05);
+$shadow-hover: 0 14px 36px rgba(0, 0, 0, 0.09);
+
+// ── Breakpoints ──────────────────────────────────────────────
+$bp-xl:  1280px;
+$bp-lg:  1024px;
+$bp-md:  768px;
+$bp-sm:  480px;
+
+// ── Mixins ───────────────────────────────────────────────────
+@mixin card-base {
+  background:    $bg-card;
+  border-radius: $radius-card;
+  border:        1px solid $border;
+  box-shadow:    $shadow-card;
+  transition:    box-shadow 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    box-shadow: $shadow-hover;
+    transform:  translateY(-3px);
+    border-color: rgba($primary-hex, 0.25);
+  }
+}
+
+@mixin section-title {
+  font-family:   $font-title;
+  font-size:     1.1rem;
+  font-weight:   800;
+  color:         $text-main;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+// ============================================================
+//  1. PAGE WRAPPER
+// ============================================================
+.rg-page {
+  background:  $bg-page;
+  min-height:  100vh;
+  padding:     32px 28px;
+  font-family: $font-body;
+  box-sizing:  border-box;
+  display:     flex;
+  flex-direction: column;
+  gap:         28px;
+}
+
+// ============================================================
+//  2. HEADER
+// ============================================================
+.rg-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  flex-wrap:       wrap;
+  gap:             16px;
+
+  &__eyebrow {
+    font-family:   $font-title;
+    font-size:     0.72rem;
+    font-weight:   800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color:         $primary;
+    display:       block;
+    margin-bottom: 4px;
+  }
+
+  &__title {
+    font-family:   $font-title;
+    font-size:     2rem;
+    font-weight:   900;
+    color:         $text-main;
+    text-transform: uppercase;
+    margin:        0 0 4px;
+    line-height:   1.1;
+  }
+
+  &__sub {
+    font-size:  0.82rem;
+    color:      $text-muted;
+    margin:     0;
+  }
+
+  &__controls {
+    display:     flex;
+    align-items: center;
+    gap:         12px;
+    flex-wrap:   wrap;
+  }
+}
+
+// ── Tabs de período ──────────────────────────────────────────
+.periodo-tabs {
+  display:       flex;
+  background:    #ffffff;
+  border:        1px solid $border;
+  border-radius: 10px;
+  overflow:      hidden;
+}
+
+.periodo-tab {
+  background:    transparent;
+  border:        none;
+  padding:       8px 16px;
+  font-family:   $font-title;
+  font-size:     0.78rem;
+  font-weight:   700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color:         $text-muted;
+  cursor:        pointer;
+  transition:    all 0.2s ease;
+
+  &.active {
+    background:  $dark-hex;
+    color:       $primary-hex;
+  }
+
+  &:hover:not(.active) {
+    background:  #f1f5f9;
+    color:       $text-main;
+  }
+}
+
+// ── Botón exportar ──────────────────────────────────────────
+.btn-export {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           8px;
+  background:    $primary-hex;
+  color:         #ffffff;
+  border:        none;
+  border-radius: $radius-sm;
+  padding:       10px 20px;
+  font-family:   $font-title;
+  font-size:     0.8rem;
+  font-weight:   800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor:        pointer;
+  transition:    background 0.25s, transform 0.2s;
+
+  &:hover {
+    background: $dark-hex;
+    transform:  translateY(-2px);
+  }
+
+  i { font-size: 0.9rem; }
+}
+
+// ============================================================
+//  3. LOADER
+// ============================================================
+.rg-loader {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  gap:             12px;
+  padding:         60px 0;
+  color:           $text-muted;
+  font-size:       0.9rem;
+  font-family:     $font-body;
+
+  &__ring {
+    width:  44px;
+    height: 44px;
+    border: 4px solid $border;
+    border-top-color: $primary-hex;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ============================================================
+//  4. KPI GRID
+// ============================================================
+.kpi-grid {
+  display:               grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap:                   16px;
+
+  @media (max-width: $bp-xl) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: $bp-md) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: $bp-sm) { grid-template-columns: 1fr; }
+}
+
+.kpi-card {
+  @include card-base;
+  padding:    22px 20px 18px;
+
+  &--warning {
+    border-color: rgba(239, 68, 68, 0.3);
+    .kpi-card__icon.accent-warning { background: #fef2f2; color: #ef4444; }
+    .kpi-card__value { color: #ef4444; }
+  }
+
+  &__top {
+    display:         flex;
+    justify-content: space-between;
+    align-items:     flex-start;
+    margin-bottom:   14px;
+  }
+
+  &__icon {
+    width:         40px;
+    height:        40px;
+    border-radius: 10px;
+    display:       flex;
+    align-items:   center;
+    justify-content: center;
+    font-size:     1.1rem;
+
+    &.accent-primary {
+      background: rgba($primary-hex, 0.12);
+      color:      $primary-hex;
+    }
+    &.accent-dark {
+      background: #f1f5f9;
+      color:      $dark-hex;
+    }
+    &.accent-warning {
+      background: #fef2f2;
+      color:      #ef4444;
+    }
+  }
+
+  &__trend {
+    font-family:   $font-title;
+    font-size:     0.72rem;
+    font-weight:   800;
+    border-radius: 20px;
+    padding:       3px 8px;
+
+    &.trend-up {
+      background: rgba(34, 197, 94, 0.12);
+      color:      #16a34a;
+    }
+    &.trend-down {
+      background: rgba(239, 68, 68, 0.12);
+      color:      #ef4444;
+    }
+    &.trend-neutral {
+      background: #f1f5f9;
+      color:      $text-muted;
+    }
+  }
+
+  &__value {
+    font-family:   $font-title;
+    font-size:     1.7rem;
+    font-weight:   900;
+    color:         $text-main;
+    line-height:   1;
+    margin-bottom: 4px;
+  }
+
+  &__label {
+    font-family:   $font-title;
+    font-size:     0.75rem;
+    font-weight:   800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color:         $text-main;
+    margin-bottom: 2px;
+  }
+
+  &__sub {
+    font-size:  0.78rem;
+    color:      $text-light;
+  }
+}
+
+// ============================================================
+//  5. FILA DE GRÁFICAS
+// ============================================================
+.charts-row {
+  display:               grid;
+  grid-template-columns: 1fr 400px;
+  gap:                   20px;
+
+  @media (max-width: $bp-lg) { grid-template-columns: 1fr; }
+}
+
+.chart-card {
+  @include card-base;
+  padding: 24px;
+
+  &__header {
+    display:         flex;
+    justify-content: space-between;
+    align-items:     flex-start;
+    margin-bottom:   20px;
+  }
+
+  &__title { @include section-title; margin-bottom: 4px; }
+
+  &__sub {
+    font-size:  0.82rem;
+    color:      $text-muted;
+    margin:     0;
+  }
+
+  &--wide  { /* Toma todo el ancho disponible */ }
+  &--donut { /* Columna fija */ }
+}
+
+// ── Leyenda de la gráfica de líneas ────────────────────────
+.chart-legend {
+  display:     flex;
+  align-items: center;
+  gap:         16px;
+  font-size:   0.78rem;
+  color:       $text-muted;
+  font-family: $font-title;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.legend-dot {
+  display:       inline-block;
+  width:         10px;
+  height:        10px;
+  border-radius: 50%;
+  margin-right:  5px;
+
+  &--primary { background: $primary-hex; }
+  &--dark    { background: $dark-hex;    }
+}
+
+// ── SVG Gráfica de líneas ────────────────────────────────────
+.chart-svg-wrapper {
+  width:    100%;
+  overflow: hidden;
+}
+
+.linea-svg {
+  width:   100%;
+  height:  auto;
+  display: block;
+}
+
+.svg-grid-line {
+  stroke:       #e2e8f0;
+  stroke-width: 1;
+}
+
+.svg-line {
+  transition: stroke-width 0.2s;
+
+  &--ingresos:hover { stroke-width: 3.5; }
+  &--egresos:hover  { stroke-width: 2.8; }
+}
+
+.svg-dot {
+  transition: r 0.2s;
+  cursor:     pointer;
+
+  &:hover { r: 6; }
+}
+
+.svg-label-mes {
+  text-anchor:  middle;
+  fill:         $text-muted;
+  font-family:  $font-title;
+  font-size:    9px;
+  font-weight:  700;
+  text-transform: uppercase;
+}
+
+// ── Donut chart ──────────────────────────────────────────────
+.donut-wrapper {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            20px;
+}
+
+.donut-svg {
+  width:    200px;
+  height:   200px;
+  overflow: visible;
+  display:  block;
+}
+
+.donut-segment {
+  cursor:     pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  transform-origin: center;
+
+  &--hover {
+    filter:    drop-shadow(0 4px 10px rgba($primary-hex, 0.35));
+    transform: scale(1.04);
+  }
+}
+
+.donut-center-label {
+  text-anchor:   middle;
+  fill:          $text-muted;
+  font-family:   $font-title;
+  font-size:     11px; /* 🔥 Subido de 7px a 11px */
+  font-weight:   800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.donut-center-value {
+  text-anchor: middle;
+  fill:        $text-main;
+  font-family: $font-title;
+  font-size:   16px; /* 🔥 Subido de 8.5px a 16px */
+  font-weight: 900;
+}
+
+.donut-legend {
+  width:          100%;
+  display:        flex;
+  flex-direction: column;
+  gap:            12px; /* Más espacio entre las filas */
+}
+
+.donut-legend__item {
+  display:       flex;
+  align-items:   center;
+  gap:           12px;
+  padding:       10px 12px;
+  border-radius: $radius-sm;
+  cursor:        pointer;
+  transition:    background 0.2s;
+
+  &:hover,
+  &--active {
+    background: #f8fafc;
+  }
+}
+
+.donut-legend__dot {
+  width:         14px; /* 🔥 Cuadradito de color más grande */
+  height:        14px;
+  border-radius: 4px;
+  flex-shrink:   0;
+}
+
+.donut-legend__info {
+  flex:           1;
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+}
+
+.donut-legend__label {
+  font-family:   $font-title;
+  font-size:     1rem; /* 🔥 Letras grandes y legibles */
+  font-weight:   900;
+  text-transform: uppercase;
+  color:         $text-main;
+}
+
+.donut-legend__pct {
+  font-size:  0.85rem; /* 🔥 Porcentaje más visible */
+  font-weight: 600;
+  color:      $text-muted;
+}
+
+.donut-legend__val {
+  font-family: $font-title;
+  font-size:   1.1rem; /* 🔥 Montos de dinero bien grandes */
+  font-weight: 900;
+  color:       $text-main;
+  white-space: nowrap;
+}
+
+// ============================================================
+//  6. FILA INFERIOR
+// ============================================================
+.bottom-row {
+  display:               grid;
+  grid-template-columns: 1fr 380px;
+  gap:                   20px;
+
+  @media (max-width: $bp-lg) { grid-template-columns: 1fr; }
+}
+
+// ── Tabla de ventas ─────────────────────────────────────────
+.table-section {
+  @include card-base;
+  padding:       24px;
+  overflow:      hidden;
+
+  &__header {
+    display:         flex;
+    justify-content: space-between;
+    align-items:     flex-start;
+    margin-bottom:   20px;
+    gap:             12px;
+    flex-wrap:       wrap;
+  }
+
+  &__search {
+    position:    relative;
+    display:     flex;
+    align-items: center;
+
+    i {
+      position:  absolute;
+      left:      14px;
+      color:     $text-light;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.table-search {
+  padding-left: 36px !important;
+  width:        240px;
+  height:       38px;
+  font-size:    0.85rem;
+  border-radius: $radius-sm;
+}
+
+// override del estilo global para dentro de la tarjeta
+.table-premium-admin {
+  thead { border-radius: $radius-sm $radius-sm 0 0; overflow: hidden; }
+}
+
+.tabla-vacia {
+  text-align:  center;
+  padding:     40px !important;
+  color:       $text-light;
+  font-size:   0.9rem;
+
+  i {
+    display:       block;
+    font-size:     2rem;
+    margin-bottom: 10px;
+    color:         $border;
+  }
+}
+
+// ── Estados de la tabla ──────────────────────────────────────
+.status-completado {
+  background: rgba(34, 197, 94, 0.10);
+  color:      #16a34a;
+}
+.status-pendiente {
+  background: rgba(234, 179, 8, 0.12);
+  color:      #a16207;
+}
+.status-cancelado {
+  background: rgba(239, 68, 68, 0.10);
+  color:      #dc2626;
+}
+
+// ── Top productos ────────────────────────────────────────────
+.top-productos {
+  @include card-base;
+  padding: 24px;
+}
+
+.producto-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            14px;
+  margin-top:     4px;
+}
+
+.producto-item {
+  display:     flex;
+  align-items: center;
+  gap:         14px;
+
+  &__rank {
+    width:         28px;
+    height:        28px;
+    border-radius: 8px;
+    background:    $dark-hex;
+    color:         $primary-hex;
+    font-family:   $font-title;
+    font-weight:   900;
+    font-size:     0.85rem;
+    display:       flex;
+    align-items:   center;
+    justify-content: center;
+    flex-shrink:   0;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-family:   $font-title;
+    font-size:     0.82rem;
+    font-weight:   800;
+    color:         $text-main;
+    text-transform: uppercase;
+    white-space:   nowrap;
+    overflow:      hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 5px;
+  }
+
+  &__bar-wrap {
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+    margin-bottom: 4px;
+  }
+
+  &__bar {
+    flex:          1;
+    height:        5px;
+    background:    $border;
+    border-radius: 10px;
+    overflow:      hidden;
+  }
+
+  &__bar-fill {
+    height:        100%;
+    background:    $primary-hex;
+    border-radius: 10px;
+    transition:    width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  &__pct {
+    font-family: $font-title;
+    font-size:   0.7rem;
+    font-weight: 800;
+    color:       $text-muted;
+    min-width:   30px;
+  }
+
+  &__meta {
+    display:  flex;
+    gap:      12px;
+    font-size: 0.72rem;
+    color:    $text-muted;
+  }
+
+  &__ingreso {
+    font-family: $font-title;
+    font-size:   0.82rem;
+    font-weight: 900;
+    color:       $primary-hex;
+    white-space: nowrap;
+  }
+}
+
+// ── Stock badges ─────────────────────────────────────────────
+.stock-critico {
+  color:       #ef4444;
+  font-weight: 800;
+}
+.stock-bajo {
+  color:       #f59e0b;
+  font-weight: 700;
+}
+.stock-ok {
+  color:       #64748b;
+}
+
+// ============================================================
+//  IMPRESIÓN A PDF (Estilos exclusivos para exportar)
+// ============================================================
+@media print {
+  // Ocultamos botones y barras de búsqueda en el PDF
+  .rg-header__controls,
+  .btn-icon-action,
+  .table-section__search {
+    display: none !important;
+  }
+
+  // Quitamos sombras y ajustamos fondo
+  .rg-page {
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+  .admin-card-premium {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+}
+
+// ============================================================
+//  NUEVO: ETIQUETAS DE LA GRÁFICA DE LÍNEAS
+// ============================================================
+.svg-label-valor {
+  text-anchor:  middle;
+  fill:         $text-main;
+  font-family:  $font-title;
+  font-size:    10px;
+  font-weight:  900;
+  pointer-events: none; // Evita que interrumpa el hover
+}
+
+// ============================================================
+//  NUEVO: MODAL DE DETALLE (ESTILO RECIBO)
+// ============================================================
+.rg-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.rg-modal-content {
+  background: #ffffff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 24px;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s ease;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.rg-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: $text-muted;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: #ef4444;
+    color: #fff;
+  }
+}
+
+.rg-modal-header {
+  padding: 30px 30px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px dashed $border;
+}
+
+.rg-modal-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: rgba($primary-hex, 0.15);
+  color: $primary-hex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.rg-modal-title-box {
+  .rg-eyebrow {
+    display: block;
+    font-size: 0.7rem;
+    font-family: $font-title;
+    font-weight: 800;
+    color: $primary-hex;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  h3 {
+    margin: 0;
+    font-family: $font-title;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: $text-main;
+  }
+}
+
+.rg-modal-body {
+  padding: 24px 30px;
+}
+
+.rg-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rg-info-item {
+  display: flex;
+  flex-direction: column;
+
+  .rg-info-label {
+    font-size: 0.75rem;
+    color: $text-muted;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    i { margin-right: 4px; color: $text-light; }
+  }
+  .rg-info-value {
+    font-size: 1rem;
+    color: $text-main;
+    font-weight: 600;
+  }
+}
+
+.mt-1 { margin-top: 4px; }
+
+.rg-total-box {
+  margin-top: 24px;
+  background: $dark-hex;
+  border-radius: 16px;
+  padding: 20px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  span {
+    font-family: $font-title;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #cbd5e1;
+  }
+  h2 {
+    margin: 0;
+    font-family: $font-title;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: $primary-hex;
+  }
+}
+
+.rg-modal-footer {
+  padding: 0 30px 30px;
+}

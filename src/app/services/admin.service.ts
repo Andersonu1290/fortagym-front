@@ -35,4 +35,9 @@ export class AdminService {
   actualizarEstadoPedido(id: number, nuevoEstado: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/pedidos/${id}/estado?nuevoEstado=${nuevoEstado}`, {});
   }
+
+  // OBTENER REPORTE GENERAL (DASHBOARD)
+  getReporteGeneral(periodo: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/reporte-general?periodo=${periodo}`);
+  }
 }

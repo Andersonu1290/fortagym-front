@@ -27,6 +27,7 @@ import { GestionHorariosComponent } from './components/dashboard/entrenador/gest
 import { GestionHorariosNutriComponent } from './components/dashboard/nutricionista/gestion-horarios-nutri/gestion-horarios-nutri';
 import { NutricionistaUsuarios } from './components/dashboard/nutricionista/nutricion-usuarios/nutricion-usuarios';
 import { AdminPedidosComponent } from './components/dashboard/admin/pedidos/pedidos';
+import { ReporteGeneralComponent } from './components/reporteGeneral/ReporteGeneral';
 
 export const routes: Routes = [
   // ==========================================
@@ -62,7 +63,8 @@ export const routes: Routes = [
   { path: 'admin/lista-usuarios', component: Usuarios, canActivate: [authGuard] },
   { path: 'admin/promociones', component: Promociones, canActivate: [authGuard] },
   { path: 'admin/productos', component: ProductosAdmin, canActivate: [authGuard] },
-  { path: 'admin/pedidos', component: AdminPedidosComponent, canActivate: [authGuard] },  
+  { path: 'admin/pedidos', component: AdminPedidosComponent, canActivate: [authGuard] },
+  { path: 'admin/reporte-general', component: ReporteGeneralComponent, canActivate: [authGuard] },
   // Dashboard Clínico Deportivo (Entrenador y Nutricionista)
   { path: 'entrenador/dashboard', component: Entrenador, canActivate: [authGuard] },
   { path: 'nutricion/dashboard', component: Nutricionista, canActivate: [authGuard] },

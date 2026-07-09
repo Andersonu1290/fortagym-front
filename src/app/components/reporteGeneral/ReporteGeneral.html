@@ -1,0 +1,365 @@
+<!-- ============================================================
+     FORTAGYM — Dashboard Reporte General del Administrador
+     ============================================================ -->
+
+<section class="rg-page">
+
+  <div class="rg-header">
+    <div class="rg-header__left">
+      <span class="rg-header__eyebrow">Panel de Administración</span>
+      <h1 class="rg-header__title">Reporte General</h1>
+      <p class="rg-header__sub">Actualizado al {{ today | date:'dd/MM/yyyy, HH:mm' }}hs</p>
+    </div>
+
+    <div class="rg-header__controls">
+      <div class="periodo-tabs">
+        <button
+          *ngFor="let p of periodos"
+          class="periodo-tab"
+          [class.active]="periodoSeleccionado === p"
+          (click)="cambiarPeriodo(p)">
+          {{ p }}
+        </button>
+      </div>
+
+      <button class="btn-export" (click)="exportarReporte()">
+        <i class="fa-solid fa-file-arrow-down"></i>
+        Exportar PDF
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="cargando" class="rg-loader">
+    <div class="rg-loader__ring"></div>
+    <span>Cargando datos…</span>
+  </div>
+
+  <div class="kpi-grid" *ngIf="!cargando">
+    <div
+      class="kpi-card admin-card-premium"
+      *ngFor="let k of kpiCards; trackBy: trackByKpi"
+      [class.kpi-card--warning]="k.accentClass === 'accent-warning'">
+
+      <div class="kpi-card__top">
+        <div class="kpi-card__icon" [ngClass]="k.accentClass">
+          <i class="fa-solid {{ k.icon }}"></i>
+        </div>
+        <span class="kpi-card__trend" [ngClass]="trendClass(k.trend)">
+          {{ trendIcon(k.trend) }}
+          {{ k.trend !== 0 ? (k.trend | number:'1.1-1') + '%' : '—' }}
+        </span>
+      </div>
+
+      <div class="kpi-card__value">{{ k.value }}</div>
+      <div class="kpi-card__label">{{ k.label }}</div>
+      <div class="kpi-card__sub">{{ k.subLabel }}</div>
+    </div>
+  </div>
+
+  <div class="charts-row" *ngIf="!cargando">
+
+    <div class="chart-card admin-card-premium chart-card--wide">
+      <div class="chart-card__header">
+        <div>
+          <h2 class="chart-card__title">Ingresos vs. Egresos</h2>
+          <p class="chart-card__sub">Evolución del período seleccionado</p>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-dot legend-dot--primary"></span> Ingresos
+          <span class="legend-dot legend-dot--dark"></span> Egresos
+        </div>
+      </div>
+
+      <div class="chart-svg-wrapper">
+        <svg
+          viewBox="0 0 640 220"
+          class="linea-svg"
+          preserveAspectRatio="xMidYMid meet">
+
+          <line *ngFor="let i of [0,1,2,3,4]"
+            [attr.x1]="30" [attr.x2]="610"
+            [attr.y1]="20 + i * 44" [attr.y2]="20 + i * 44"
+            class="svg-grid-line"/>
+
+          <defs>
+            <linearGradient id="gradIngresos" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#ff8d22" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#ff8d22" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="gradEgresos" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#111111" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#111111" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <polyline
+            [attr.points]="generarPolyline('ingresos')"
+            fill="none"
+            stroke="#ff8d22"
+            stroke-width="2.5"
+            stroke-linejoin="round"
+            class="svg-line svg-line--ingresos"/>
+
+          <circle
+            *ngFor="let p of graficaMeses; let i = index"
+            [attr.cx]="xPos(i, graficaMeses.length)"
+            [attr.cy]="graficaAltura - alturaBar(p.ingresos) + 20"
+            r="5"
+            fill="#ff8d22"
+            class="svg-dot">
+          </circle>
+
+          <text
+            *ngFor="let p of graficaMeses; let i = index"
+            [attr.x]="xPos(i, graficaMeses.length)"
+            [attr.y]="graficaAltura - alturaBar(p.ingresos) + 8"
+            class="svg-label-valor">
+            {{ formatK(p.ingresos) }}
+          </text>
+
+          <polyline
+            [attr.points]="generarPolyline('egresos')"
+            fill="none"
+            stroke="#111111"
+            stroke-width="2"
+            stroke-dasharray="5 3"
+            stroke-linejoin="round"
+            class="svg-line svg-line--egresos"/>
+
+          <text
+            *ngFor="let p of graficaMeses; let i = index"
+            [attr.x]="xPos(i, graficaMeses.length)"
+            [attr.y]="212"
+            class="svg-label-mes">
+            {{ p.mes }}
+          </text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="chart-card admin-card-premium chart-card--donut">
+      <div class="chart-card__header">
+        <div>
+          <h2 class="chart-card__title">Distribución de Ventas</h2>
+          <p class="chart-card__sub">Por categoría — {{ periodoSeleccionado }}</p>
+        </div>
+      </div>
+
+      <div class="donut-wrapper">
+        <svg viewBox="0 0 200 200" class="donut-svg">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#f1f5f9" stroke-width="32"/>
+
+          <path
+            *ngFor="let seg of donutAngulos; let si = index"
+            [attr.d]="buildArcPath(seg.inicio, seg.fin)"
+            [attr.fill]="seg.color"
+            class="donut-segment"
+            [class.donut-segment--hover]="hoveredSegmento === donutSegmentos[si]"
+            (mouseenter)="onHoverSegmento(donutSegmentos[si])"
+            (mouseleave)="onHoverSegmento(null)">
+            <title>{{ donutSegmentos[si]?.label }}: {{ formatMoneda(donutSegmentos[si]?.valor ?? 0) }}</title>
+          </path>
+
+          <!-- Centro del donut -->
+          <circle cx="100" cy="100" r="48" fill="#ffffff"/>
+          <text x="100" y="90" class="donut-center-label">TOTAL</text>
+          <text x="100" y="118" class="donut-center-value">
+            {{ hoveredSegmento ? (hoveredSegmento.porcentaje + '%') : formatMoneda(donutTotal) }}
+          </text>
+        </svg>
+
+        <div class="donut-legend">
+          <div
+            class="donut-legend__item"
+            *ngFor="let seg of donutSegmentos"
+            (mouseenter)="onHoverSegmento(seg)"
+            (mouseleave)="onHoverSegmento(null)"
+            [class.donut-legend__item--active]="hoveredSegmento === seg">
+            <span class="donut-legend__dot" [style.background]="seg.color"></span>
+            <div class="donut-legend__info">
+              <span class="donut-legend__label">{{ seg.label }}</span>
+              <span class="donut-legend__pct">{{ seg.porcentaje }}%</span>
+            </div>
+            <span class="donut-legend__val">{{ formatMoneda(seg.valor) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-row" *ngIf="!cargando">
+
+    <div class="table-section admin-card-premium">
+      <div class="table-section__header">
+        <div>
+          <h2 class="chart-card__title">Ventas Recientes</h2>
+          <p class="chart-card__sub">{{ ventasFiltradas.length }} transacciones</p>
+        </div>
+        <div class="table-section__search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            class="form-control-premium table-search"
+            placeholder="Buscar cliente, producto…"
+            [(ngModel)]="filtroTabla"
+            (input)="aplicarFiltro()">
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table-premium-admin">
+          <thead>
+            <tr>
+              <th>#ID</th>
+              <th>Cliente</th>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let v of ventasFiltradas; trackBy: trackByVenta">
+              <td class="fw-bold">#{{ v.id }}</td>
+              <td>{{ v.cliente }}</td>
+              <td>{{ v.producto }}</td>
+              <td>
+                <span class="product-tag">{{ v.categoria }}</span>
+              </td>
+              <td class="fw-bold">{{ formatMoneda(v.monto) }}</td>
+              <td>{{ v.fecha | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span [ngClass]="estadoClass(v.estado)">
+                  <i class="fa-solid"
+                    [class.fa-circle-check]="v.estado === 'completado'"
+                    [class.fa-clock]="v.estado === 'pendiente'"
+                    [class.fa-circle-xmark]="v.estado === 'cancelado'">
+                  </i>
+                  {{ v.estado | titlecase }}
+                </span>
+              </td>
+              <td>
+                <button
+                  class="btn-icon-action edit icon-only"
+                  (click)="verDetalleVenta(v.id)"
+                  title="Ver detalle">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="ventasFiltradas.length === 0">
+              <td colspan="8" class="tabla-vacia">
+                <i class="fa-solid fa-inbox"></i>
+                Sin resultados para "{{ filtroTabla }}"
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="top-productos admin-card-premium">
+      <div class="chart-card__header">
+        <div>
+          <h2 class="chart-card__title">Top Productos</h2>
+          <p class="chart-card__sub">Por unidades vendidas</p>
+        </div>
+      </div>
+
+      <div class="producto-list">
+        <div
+          class="producto-item"
+          *ngFor="let p of productosTop; let i = index; trackBy: trackByProducto">
+
+          <div class="producto-item__rank">{{ i + 1 }}</div>
+
+          <div class="producto-item__info">
+            <div class="producto-item__name">{{ p.nombre }}</div>
+            <div class="producto-item__bar-wrap">
+              <div class="producto-item__bar">
+                <div
+                  class="producto-item__bar-fill"
+                  [style.width.%]="p.porcentaje">
+                </div>
+              </div>
+              <span class="producto-item__pct">{{ p.porcentaje }}%</span>
+            </div>
+            <div class="producto-item__meta">
+              <span>{{ p.ventas }} ventas</span>
+              <span [ngClass]="stockClass(p.stock)">
+                Stock: {{ p.stock === 999 ? '∞' : p.stock }}
+              </span>
+            </div>
+          </div>
+
+          <div class="producto-item__ingreso">{{ formatMoneda(p.ingreso) }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rg-modal-overlay" *ngIf="ventaSeleccionada" (click)="cerrarModalVenta()">
+    <div class="rg-modal-content" (click)="$event.stopPropagation()">
+
+      <button class="rg-modal-close" (click)="cerrarModalVenta()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="rg-modal-header">
+        <div class="rg-modal-icon">
+          <i class="fa-solid fa-receipt"></i>
+        </div>
+        <div class="rg-modal-title-box">
+          <span class="rg-eyebrow">Transacción Confirmada</span>
+          <h3>Orden #{{ ventaSeleccionada.id }}</h3>
+        </div>
+      </div>
+
+      <div class="rg-modal-body">
+        <div class="rg-info-grid">
+
+          <div class="rg-info-item">
+            <span class="rg-info-label"><i class="fa-solid fa-user"></i> Cliente</span>
+            <span class="rg-info-value">{{ ventaSeleccionada.cliente }}</span>
+          </div>
+
+          <div class="rg-info-item">
+            <span class="rg-info-label"><i class="fa-solid fa-calendar-day"></i> Fecha</span>
+            <span class="rg-info-value">{{ ventaSeleccionada.fecha | date:'dd MMMM, yyyy' }}</span>
+          </div>
+
+          <div class="rg-info-item">
+            <span class="rg-info-label"><i class="fa-solid fa-box"></i> Detalle de Compra</span>
+            <span class="rg-info-value">{{ ventaSeleccionada.producto }}</span>
+            <span class="product-tag mt-1">{{ ventaSeleccionada.categoria }}</span>
+          </div>
+
+          <div class="rg-info-item">
+            <span class="rg-info-label"><i class="fa-solid fa-circle-check"></i> Estado</span>
+            <span [ngClass]="estadoClass(ventaSeleccionada.estado)" style="display: inline-block; padding: 4px 10px; border-radius: 6px; font-weight: 800; margin-top: 5px;">
+              {{ ventaSeleccionada.estado | titlecase }}
+            </span>
+          </div>
+
+        </div>
+
+        <div class="rg-total-box">
+          <span>Total Pagado</span>
+          <h2>{{ formatMoneda(ventaSeleccionada.monto) }}</h2>
+        </div>
+      </div>
+
+      <div class="rg-modal-footer">
+        <button class="btn-export w-100" style="justify-content: center;" (click)="cerrarModalVenta()">
+          Cerrar Detalle
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</section>
