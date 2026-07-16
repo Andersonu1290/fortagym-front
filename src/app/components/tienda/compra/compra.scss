@@ -194,3 +194,109 @@
 
 // 6. Botones de acción finales
 .conf-actions { display: flex; gap: 10px; margin-top: 14px; animation: fup .35s ease both; .btn-track { flex: 1; padding: 12px; background: var(--color-forta-primary); color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: 0.2s; &:hover { background: #d96e00; } } .btn-cont { flex: 1; padding: 12px; background: transparent; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: 0.2s; &:hover { background: #f8fafc; color: #111; } } }
+
+// ==========================================================================
+// ── ANIMACIÓN DE CARGA (SKELETON) ─────────────────────────────────────────
+// ==========================================================================
+.skeleton {
+  background: #e2e8f0 !important;
+  color: transparent !important;
+  border-color: transparent !important;
+  pointer-events: none; // Evita que se haga clic mientras carga
+  animation: pulse 1.5s infinite ease-in-out;
+
+  &::placeholder {
+    color: transparent !important;
+  }
+}
+
+@keyframes pulse {
+  0% { background-color: #e2e8f0; }
+  50% { background-color: #cbd5e1; }
+  100% { background-color: #e2e8f0; }
+}
+
+// ==========================================================================
+// ── ESTILOS PARA OTROS MÉTODOS DE PAGO ────────────────────────────────────
+// ==========================================================================
+
+.pago-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 10px;
+  animation: fup 0.3s ease;
+}
+
+.pago-desc { font-size: 12px; color: #64748b; margin-bottom: 12px; }
+
+.bank-accounts {
+  display: flex; flex-direction: column; gap: 8px;
+  .bank {
+    background: #fff; border: 1px solid #cbd5e1; padding: 10px; border-radius: 6px; font-size: 12px; color: #111;
+    i { color: var(--color-forta-primary); margin-right: 4px; }
+  }
+}
+
+.qr-container {
+  display: flex; gap: 16px; align-items: center; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1;
+  .qr-placeholder { width: 80px; height: 80px; background: #e2e8f0; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #64748b; font-size: 10px; text-align: center; i { font-size: 32px; margin-bottom: 4px; color: #94a3b8; } }
+  .qr-info { flex: 1; p { margin: 0 0 4px 0; font-size: 12px; color: #64748b; } .phone-num { font-size: 18px; font-weight: 700; color: #742284; /* Color Yape */ margin: 4px 0; } .phone-name { font-size: 11px; font-weight: 600; color: #111; } }
+}
+
+.efectivo-msg {
+  display: flex; gap: 14px; align-items: flex-start;
+  i { font-size: 32px; color: #16a34a; background: #dcfce7; padding: 8px; border-radius: 8px; }
+  .ef-ttl { font-size: 13px; font-weight: 700; color: #111; margin: 0 0 4px 0; }
+  .ef-desc { font-size: 12px; color: #64748b; line-height: 1.5; margin: 0; }
+}
+
+// ==========================================================================
+// ── ESTILOS PARA RECOJO EN SEDE ───────────────────────────────────────────
+// ==========================================================================
+
+.sede-info-box {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  background: rgba(255, 141, 34, 0.05); // Naranjita muy suave
+  border: 1px solid rgba(255, 141, 34, 0.3);
+  padding: 20px;
+  border-radius: 12px;
+  animation: fup 0.3s ease;
+
+  .sede-icon {
+    font-size: 32px;
+    color: var(--color-forta-primary);
+    background: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+  }
+
+  .sede-text {
+    h4 {
+      margin: 0 0 6px 0;
+      font-size: 15px;
+      color: #111;
+      font-weight: 700;
+    }
+    p {
+      margin: 0;
+      font-size: 13px;
+      color: #475569;
+    }
+    .sede-hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #16a34a; // Verde para dar confianza
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      i { font-size: 14px; }
+    }
+  }
+}

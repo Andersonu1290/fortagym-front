@@ -37,4 +37,8 @@ export class NutricionService {
   eliminarNutricion(usuarioId: number): Observable<any> {
     return this.http.delete(`${this.apiNutri}/eliminar/usuario/${usuarioId}`, { headers: this.getHeaders() });
   }
+
+  getMiNutricion(): Observable<any> {
+    return this.http.get(`${this.apiNutri}/mi-cartilla`);
+  }
 }

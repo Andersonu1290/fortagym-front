@@ -1,0 +1,134 @@
+<main class="section-admin">
+  <div class="container gestion-container">
+
+    <!-- HERO BANNER PREMIUM -->
+    <div class="hero-banner mb-50">
+      <div class="hero-stripe"></div>
+      <div class="hero-text">
+        <a routerLink="/usuario" class="link-view-all text-light">
+          <i class="fa fa-arrow-left"></i> Volver al Dashboard
+        </a>
+        <h1 class="hero-title mt-20">
+          Mis Planes <span class="accent">FortaGym</span>
+        </h1>
+        <p class="hero-sub">Revisa tu rutina de entrenamiento y plan nutricional asignados.</p>
+      </div>
+
+      <!-- Pestañas (Tabs) estilo Stat-Chips -->
+      <div class="hero-stats" style="cursor: pointer;">
+        <div class="stat-chip" [class.active-tab]="vistaActual === 'rutina'" (click)="setVista('rutina')">
+          <div class="stat-num" style="font-size: 1.5rem;"><i class="fa fa-dumbbell"></i></div>
+          <div class="stat-lbl">Entrenamiento</div>
+        </div>
+        <div class="stat-chip" [class.active-tab]="vistaActual === 'nutricion'" (click)="setVista('nutricion')">
+          <div class="stat-num" style="font-size: 1.5rem;"><i class="fa fa-apple-alt"></i></div>
+          <div class="stat-lbl">Nutrición</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESTADO DE CARGA -->
+    <div *ngIf="cargando" class="empty-state">
+      <i class="fa fa-spinner fa-spin"></i>
+      <p>Cargando tus planes de entrenamiento...</p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VISTA: RUTINA DE ENTRENAMIENTO             -->
+    <!-- ========================================== -->
+    <div *ngIf="!cargando && vistaActual === 'rutina'" class="slide-up-1">
+
+      <!-- Si NO tiene rutina -->
+      <div *ngIf="!rutina" class="empty-state">
+        <i class="fa fa-calendar-times"></i>
+        <p>Aún no tienes una rutina de ejercicios asignada.</p>
+        <span class="text-gray-soft">Contacta con tu entrenador para que diseñe tu plan.</span>
+      </div>
+
+      <!-- Si SÍ tiene rutina -->
+      <div *ngIf="rutina" class="admin-card-premium form-wrapper">
+        <div class="form-header">
+          <div class="form-header-left">
+            <h2 class="form-title">Tu Rutina Semanal</h2>
+            <p class="text-gray-soft" style="margin-top: 5px;">{{ rutina.observaciones }}</p>
+          </div>
+
+          <div class="prof-profile">
+            <img *ngIf="rutina.fotoEntrenador" [src]="resolverImg(rutina.fotoEntrenador)" alt="Entrenador" class="prof-avatar">
+            <div class="prof-info">
+              <span class="prof-role"><i class="fa fa-dumbbell"></i> Entrenador asignado: </span>
+              <span class="prof-name">{{ rutina.nombreEntrenador || 'Por asignar' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table-premium-admin">
+            <thead>
+              <tr>
+                <th>Días</th>
+                <th>Ejercicio</th>
+                <th>Series x Reps</th>
+                <th>Descanso</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ej of rutina.detalles">
+                <td style="font-weight: 700; color: var(--color-forta-primary);">{{ ej.dias }}</td>
+                <td style="font-weight: 600;">{{ ej.ejercicio }}</td>
+                <td>{{ ej.seriesReps }}</td>
+                <td class="text-gray-soft"><i class="fa fa-clock-o"></i> {{ ej.descanso }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VISTA: PLAN NUTRICIONAL                    -->
+    <!-- ========================================== -->
+    <div *ngIf="!cargando && vistaActual === 'nutricion'" class="slide-up-1">
+
+      <!-- Si NO tiene nutrición -->
+      <div *ngIf="!nutricion" class="empty-state">
+        <i class="fa fa-file-excel-o"></i>
+        <p>Aún no tienes un plan nutricional asignado.</p>
+        <span class="text-gray-soft">Agenda una evaluación con nuestros nutricionistas.</span>
+      </div>
+
+      <!-- Si SÍ tiene nutrición -->
+      <div *ngIf="nutricion" class="admin-card-premium form-wrapper">
+        <div class="form-header">
+          <div class="form-header-left">
+            <h2 class="form-title">Tu Evaluación Nutricional</h2>
+            <p class="text-gray-soft" style="margin-top: 5px;">Última actualización: {{ nutricion.fechaRegistro | date:'mediumDate' }}</p>
+          </div>
+
+          <div class="prof-profile">
+            <img *ngIf="nutricion.fotoNutricionista" [src]="resolverImg(nutricion.fotoNutricionista)" alt="Nutricionista" class="prof-avatar">
+            <div class="prof-info">
+              <span class="prof-role" style="color: #1a7a35;"><i class="fa fa-apple-alt"></i> Nutricionista asignada</span>
+              <span class="prof-name">{{ nutricion.nombreNutricionista || 'Por asignar' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-grid-2 mb-30" style="gap: 30px;">
+          <!-- Análisis Corporal -->
+          <div style="background: rgba(0,0,0,0.02); padding: 20px; border-radius: 12px; border: 1px solid #f0f0f0;">
+            <h3 style="font-size: 1.1rem; margin-top:0; color: #333;"><i class="fa fa-stethoscope text-orange"></i> Análisis Corporal</h3>
+            <p style="white-space: pre-line; color: #555; line-height: 1.6; font-size: 0.95rem;">{{ nutricion.analisisCorporal }}</p>
+          </div>
+
+          <!-- Observaciones / Plan -->
+          <div style="background: rgba(0,0,0,0.02); padding: 20px; border-radius: 12px; border: 1px solid #f0f0f0;">
+            <h3 style="font-size: 1.1rem; margin-top:0; color: #333;"><i class="fa fa-utensils text-orange"></i> Recomendaciones Diarias</h3>
+            <p style="white-space: pre-line; color: #555; line-height: 1.6; font-size: 0.95rem;">{{ nutricion.observaciones }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>

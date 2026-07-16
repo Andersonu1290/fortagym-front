@@ -47,29 +47,29 @@
             <div class="g2">
               <div class="fg">
                 <label class="flbl">Nombre <span class="r">*</span></label>
-                <input class="finp" type="text" formControlName="nombre" placeholder="Ej: Carlos">
+                <input class="finp" type="text" formControlName="nombre" placeholder="Ej: Carlos" [class.skeleton]="cargandoDatos" [readonly]="cargandoDatos">
               </div>
               <div class="fg">
                 <label class="flbl">Apellido <span class="r">*</span></label>
-                <input class="finp" type="text" formControlName="apellido" placeholder="Ej: Mendoza">
+                <input class="finp" type="text" formControlName="apellido" placeholder="Ej: Mendoza" [class.skeleton]="cargandoDatos" [readonly]="cargandoDatos">
               </div>
               <div class="fg">
                 <label class="flbl">DNI <span class="r">*</span></label>
-                <input class="finp" type="text" formControlName="dni" placeholder="45231089">
+                <input class="finp" type="text" formControlName="dni" placeholder="45231089" [class.skeleton]="cargandoDatos" [readonly]="cargandoDatos">
               </div>
               <div class="fg">
                 <label class="flbl">Teléfono <span class="r">*</span></label>
                 <div class="iw">
-                  <i class="ti ti-device-mobile iico" aria-hidden="true"></i>
-                  <input class="finp" type="tel" formControlName="telefono" placeholder="+51 999 000 000">
+                  <i class="ti ti-device-mobile iico" aria-hidden="true" [style.opacity]="cargandoDatos ? '0' : '1'"></i>
+                  <input class="finp" type="tel" formControlName="telefono" placeholder="+51 999 000 000" [class.skeleton]="cargandoDatos" [readonly]="cargandoDatos">
                 </div>
               </div>
             </div>
             <div class="fg" style="margin-top:14px">
               <label class="flbl">Correo electrónico <span class="r">*</span></label>
               <div class="iw">
-                <i class="ti ti-mail iico" aria-hidden="true"></i>
-                <input class="finp" type="email" formControlName="correo" placeholder="correo@ejemplo.com">
+                <i class="ti ti-mail iico" aria-hidden="true" [style.opacity]="cargandoDatos ? '0' : '1'"></i>
+                <input class="finp" type="email" formControlName="correo" placeholder="correo@ejemplo.com" [class.skeleton]="cargandoDatos" [readonly]="cargandoDatos">
               </div>
               <span class="fhint">Recibirás la confirmación de tu pedido aquí.</span>
             </div>
@@ -80,53 +80,79 @@
           <div class="card-hd">
             <div class="card-ico"><i class="ti ti-map-pin" aria-hidden="true"></i></div>
             <div>
-              <div class="card-ttl">Dirección de envío</div>
-              <div class="card-sub">¿Dónde lo recibimos?</div>
+              <div class="card-ttl">
+                {{ checkoutForm.get('metodoEntrega')?.value === 'sede' ? 'Lugar de Recojo' : 'Dirección de envío' }}
+              </div>
+              <div class="card-sub">
+                {{ checkoutForm.get('metodoEntrega')?.value === 'sede' ? '¿Dónde te esperamos?' : '¿Dónde lo recibimos?' }}
+              </div>
             </div>
           </div>
           <div class="card-bd">
-            <div class="g2" style="margin-bottom:14px">
+
+            <ng-container *ngIf="checkoutForm.get('metodoEntrega')?.value !== 'sede'">
+              <div class="g2" style="margin-bottom:14px">
+                <div class="fg">
+                  <label class="flbl">Departamento <span class="r">*</span></label>
+                  <select class="fsel" formControlName="departamento">
+                    <option value="">Seleccionar...</option>
+                    <option *ngFor="let dep of listaDepartamentos" [value]="dep">{{ dep }}</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label class="flbl">Provincia <span class="r">*</span></label>
+                  <select class="fsel" formControlName="provincia" [disabled]="!listaProvincias.length">
+                    <option value="">Seleccionar...</option>
+                    <option *ngFor="let prov of listaProvincias" [value]="prov">{{ prov }}</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label class="flbl">Distrito <span class="r">*</span></label>
+                  <select class="fsel" formControlName="distrito" [disabled]="!listaDistritos.length">
+                    <option value="">Seleccionar...</option>
+                    <option *ngFor="let dist of listaDistritos" [value]="dist">{{ dist }}</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label class="flbl">Código postal</label>
+                  <input class="finp" type="text" formControlName="codigoPostal" placeholder="15074">
+                </div>
+              </div>
+              <div class="fg" style="margin-bottom:14px">
+                <label class="flbl">Dirección <span class="r">*</span></label>
+                <input class="finp" type="text" formControlName="direccion" placeholder="Av. Javier Prado 1234">
+              </div>
               <div class="fg">
-                <label class="flbl">Departamento <span class="r">*</span></label>
-                <select class="fsel" formControlName="departamento">
-                  <option value="">Seleccionar...</option>
-                  <option value="Lima">Lima</option>
-                  <option value="Arequipa">Arequipa</option>
-                  <option value="Cusco">Cusco</option>
-                  <option value="La Libertad">La Libertad</option>
+                <label class="flbl">Referencia</label>
+                <input class="finp" type="text" formControlName="referencia" placeholder="Ej: Frente al parque, edificio azul">
+              </div>
+            </ng-container>
+
+            <div *ngIf="checkoutForm.get('metodoEntrega')?.value === 'sede'" class="sede-info-box" style="flex-direction: column; align-items: stretch;">
+
+              <div class="fg" style="margin-bottom: 0;">
+                <label class="flbl">Elige en qué sede vas a recoger tu pedido <span class="r">*</span></label>
+                <select class="fsel" formControlName="sedeSeleccionada">
+                  <option *ngFor="let sede of sedesFortaGym" [value]="sede.id">{{ sede.nombre }}</option>
                 </select>
               </div>
-              <div class="fg">
-                <label class="flbl">Provincia <span class="r">*</span></label>
-                <select class="fsel" formControlName="provincia">
-                  <option value="">Seleccionar...</option>
-                  <option value="Lima">Lima</option>
-                  <option value="Callao">Callao</option>
-                </select>
-              </div>
-              <div class="fg">
-                <label class="flbl">Distrito <span class="r">*</span></label>
-                <select class="fsel" formControlName="distrito">
-                  <option value="">Seleccionar...</option>
-                  <option value="Miraflores">Miraflores</option>
-                  <option value="San Isidro">San Isidro</option>
-                  <option value="Surco">Surco</option>
-                  <option value="Barranco">Barranco</option>
-                </select>
-              </div>
-              <div class="fg">
-                <label class="flbl">Código postal</label>
-                <input class="finp" type="text" formControlName="codigoPostal" placeholder="15074">
-              </div>
+
+              <ng-container *ngFor="let sede of sedesFortaGym">
+                <div *ngIf="checkoutForm.get('sedeSeleccionada')?.value === sede.id" style="display: flex; gap: 16px; align-items: center; margin-top: 14px; border-top: 1px solid rgba(255,141,34,0.2); padding-top: 14px;">
+                  <i class="ti ti-building-store sede-icon"></i>
+                  <div class="sede-text">
+                    <h4>{{ sede.nombre }}</h4>
+                    <p><strong>Dirección:</strong> {{ sede.direccion }}, {{ sede.distrito }}.</p>
+                    <p class="sede-hint" style="margin-top:6px;">
+                      <i class="ti ti-clock"></i>
+                      Tu pedido estará listo en mostrador tras confirmar tu pago.
+                    </p>
+                  </div>
+                </div>
+              </ng-container>
+
             </div>
-            <div class="fg" style="margin-bottom:14px">
-              <label class="flbl">Dirección <span class="r">*</span></label>
-              <input class="finp" type="text" formControlName="direccion" placeholder="Av. Javier Prado 1234">
-            </div>
-            <div class="fg">
-              <label class="flbl">Referencia</label>
-              <input class="finp" type="text" formControlName="referencia" placeholder="Ej: Frente al parque, edificio azul">
-            </div>
+
           </div>
         </div>
 
@@ -197,15 +223,12 @@
 
             <div *ngIf="checkoutForm.get('metodoPago')?.value === 'tarjeta'">
               <div class="nets">
-                <div class="net v">VISA</div>
-                <div class="net m">MC</div>
-                <div class="net a">AMEX</div>
+                <div class="net v">VISA</div><div class="net m">MC</div><div class="net a">AMEX</div>
               </div>
               <div class="fg" style="margin-bottom:12px">
                 <label class="flbl">Número de tarjeta <span class="r">*</span></label>
-                <div class="iw">
-                  <i class="ti ti-credit-card iico" aria-hidden="true"></i>
-                  <input class="finp" type="text" formControlName="numeroTarjeta" placeholder="0000  0000  0000  0000">
+                <div class="iw"><i class="ti ti-credit-card iico" aria-hidden="true"></i>
+                  <input class="finp" type="text" formControlName="numeroTarjeta" placeholder="0000 0000 0000 0000" maxlength="19" (input)="formatCardNumber($event)">
                 </div>
               </div>
               <div class="fg" style="margin-bottom:12px">
@@ -215,21 +238,60 @@
               <div class="g3">
                 <div class="fg">
                   <label class="flbl">Vencimiento <span class="r">*</span></label>
-                  <input class="finp" type="text" formControlName="vencimiento" placeholder="MM/AA">
+                  <input class="finp" type="text" formControlName="vencimiento" placeholder="MM/AA" maxlength="5" (input)="formatExpiry($event)">
                 </div>
                 <div class="fg">
                   <label class="flbl">CVV <span class="r">*</span></label>
-                  <div class="iw">
-                    <i class="ti ti-lock iico" aria-hidden="true"></i>
-                    <input class="finp" type="text" formControlName="cvv" placeholder="•••" style="width:90px">
+                  <div class="iw"><i class="ti ti-lock iico" aria-hidden="true"></i>
+                    <input class="finp" type="text" formControlName="cvv" placeholder="•••" style="width:90px" maxlength="4" (input)="formatCVV($event)">
                   </div>
                 </div>
               </div>
-              <div class="chrow" style="margin-top:14px" (click)="checkoutForm.patchValue({guardarTarjeta: !checkoutForm.get('guardarTarjeta')?.value})">
+            <div class="chrow" style="margin-top:14px" (click)="checkoutForm.patchValue({guardarTarjeta: !checkoutForm.get('guardarTarjeta')?.value})">
                 <div class="chbox" [class.on]="checkoutForm.get('guardarTarjeta')?.value">
                   <i *ngIf="checkoutForm.get('guardarTarjeta')?.value" class="ti ti-check" style="font-size:11px" aria-hidden="true"></i>
                 </div>
                 <span class="chlbl">Guardar esta tarjeta para futuras compras</span>
+              </div>
+            </div>
+
+            <div *ngIf="checkoutForm.get('metodoPago')?.value === 'transferencia'" class="pago-box">
+              <p class="pago-desc">Transfiere a cualquiera de nuestras cuentas y coloca el número de operación para validar tu compra.</p>
+              <div class="bank-accounts">
+                <div class="bank"><i class="ti ti-building-bank"></i> <strong>BCP:</strong> 193-0000000-0-00 (CCI: 002193...)</div>
+                <div class="bank"><i class="ti ti-building-bank"></i> <strong>BBVA:</strong> 0011-0000-02000000 (CCI: 011000...)</div>
+              </div>
+              <div class="fg" style="margin-top:14px">
+                <label class="flbl">N° de Operación de la Transferencia <span class="r">*</span></label>
+                <input class="finp" type="text" formControlName="numeroOperacion" placeholder="Ej: 99887766">
+              </div>
+            </div>
+
+            <div *ngIf="checkoutForm.get('metodoPago')?.value === 'yape'" class="pago-box">
+              <div class="qr-container">
+                <!-- Mantenemos tu clase original pero reemplazamos los iconos por la etiqueta img -->
+                <div class="qr-placeholder" style="padding: 0; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                  <img src="assets/img/qr-yape.png" alt="QR Yape" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="qr-info">
+                  <p>Envía el monto exacto al número:</p>
+                  <p class="phone-num">999 888 777</p>
+                  <p class="phone-name">A nombre de: FortaGym SAC</p>
+                </div>
+              </div>
+              <div class="fg" style="margin-top:14px">
+                <label class="flbl">Número de Operación o Celular <span class="r">*</span></label>
+                <input class="finp" type="text" formControlName="numeroOperacion" placeholder="Ej: 00456123 o 999... ">
+              </div>
+            </div>
+
+            <div *ngIf="checkoutForm.get('metodoPago')?.value === 'efectivo'" class="pago-box">
+              <div class="efectivo-msg">
+                <i class="ti ti-cash"></i>
+                <div>
+                  <p class="ef-ttl">Pago contra entrega / Recojo</p>
+                  <p class="ef-desc">Pagarás en efectivo al momento de recibir tus productos o al recogerlos en nuestra sede. Te recomendamos tener el monto exacto.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -381,16 +443,11 @@
       </p>
 
       <div class="conf-order-num">
-
-        <i class="ti ti-receipt"
-           style="font-size:14px;color:#ff8d22">
-        </i>
-
+        <i class="ti ti-receipt" style="font-size:14px;color:#ff8d22"></i>
         Orden
         <strong>
-          #{{ confirmacionData?.pedidoId || '0001' }}
+          #{{ numeroOrden }}
         </strong>
-
       </div>
 
     </div>
@@ -536,18 +593,19 @@
           </div>
 
           <div class="info-item">
-
             <div class="info-lbl">
               Dirección
             </div>
-
             <div class="info-val">
+              <ng-container *ngIf="checkoutForm.get('metodoEntrega')?.value === 'sede'">
+                {{ obtenerDireccionSedeConfirmacion() }}
+              </ng-container>
 
-              {{ checkoutForm.get('direccion')?.value }},
-              {{ checkoutForm.get('distrito')?.value }}
-
+              <ng-container *ngIf="checkoutForm.get('metodoEntrega')?.value !== 'sede'">
+                {{ checkoutForm.get('direccion')?.value }},
+                {{ checkoutForm.get('distrito')?.value }}
+              </ng-container>
             </div>
-
           </div>
 
           <div class="info-item">
@@ -592,21 +650,14 @@
 
     <div class="conf-actions">
 
-      <button class="btn-track">
-
+      <button class="btn-track" (click)="irAHistorialCompras()">
         <i class="ti ti-truck"></i>
-
         Rastrear pedido
-
       </button>
 
-      <button class="btn-cont"
-              (click)="volverAlCarrito()">
-
+      <button class="btn-cont" (click)="irATienda()">
         <i class="ti ti-arrow-left"></i>
-
-        Volver
-
+        Volver a la tienda
       </button>
 
     </div>

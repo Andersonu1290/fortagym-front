@@ -23,4 +23,8 @@ export class RutinaService {
   guardarRutina(rutina: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/guardar`, rutina);
   }
+
+  getMiRutina(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/mi-rutina`);
+  }
 }

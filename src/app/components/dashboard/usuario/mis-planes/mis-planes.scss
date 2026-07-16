@@ -1,0 +1,119 @@
+// Importamos toda la estructura de la base del admin que me pasaste
+.hero-banner {
+  background: #111; border-radius: 18px; padding: 2.5rem 2.5rem 2rem; display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; overflow: hidden; min-height: 180px; position: relative;
+  &::before { content: ""; position: absolute; inset: 0; background: url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1400&q=80") center/cover no-repeat; opacity: 0.15; border-radius: 18px; }
+}
+.hero-stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--color-forta-primary); border-radius: 18px 0 0 18px; }
+.hero-text { position: relative; z-index: 2; .link-view-all { font-size: 0.85rem; color: #ccc; &:hover { color: #fff; } } }
+.hero-title { font-family: var(--font-title); font-size: 2.6rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: -1px; line-height: 1; margin: 0; .accent { color: var(--color-forta-primary); } }
+.hero-sub { color: #777; font-size: 0.9rem; margin-top: 8px; margin-bottom: 0; }
+.hero-stats { position: relative; z-index: 2; display: flex; gap: 1rem; flex-shrink: 0; }
+
+.stat-chip {
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 14px 22px; text-align: center; min-width: 120px; transition: all 0.3s;
+  .stat-num { font-weight: 900; color: #888; line-height: 1; transition: color 0.3s;}
+  .stat-lbl { font-size: 0.68rem; color: #777; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; transition: color 0.3s;}
+
+  &:hover { background: rgba(255, 255, 255, 0.1); }
+  // ESTILO PARA EL TAB ACTIVO 🔥
+  &.active-tab {
+    background: rgba(255, 141, 34, 0.15);
+    border-color: rgba(255, 141, 34, 0.5);
+    .stat-num { color: var(--color-forta-primary); }
+    .stat-lbl { color: #fff; }
+  }
+}
+
+.empty-state { text-align: center !important; padding: 60px 20px !important; color: #bbb; i { font-size: 3rem; display: block; margin-bottom: 12px; } p { font-size: 1.2rem; font-weight: bold; margin: 0; color: #444; } }
+
+// Formulario y Tablas
+.form-wrapper { padding: 40px; background: #fff; border-radius: 16px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04); border: 1px solid #eee; }
+.form-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 35px; padding-bottom: 25px; border-bottom: 1px solid #f0f0f0; }
+.form-title { font-family: var(--font-title); font-size: 1.8rem; font-weight: 900; color: var(--color-forta-dark); margin: 0; }
+.flex-grid-2 { display: grid; grid-template-columns: 1fr 1fr; }
+
+// Utils
+.mb-50 { margin-bottom: 50px; }
+.mb-30 { margin-bottom: 30px; }
+.text-gray-soft { color: #888; }
+.text-orange { color: var(--color-forta-primary); }
+
+@media (max-width: 992px) {
+  .hero-banner { flex-direction: column; align-items: flex-start; min-height: auto; }
+  .hero-stats { width: 100%; justify-content: flex-start; }
+  .flex-grid-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .hero-title { font-size: 1.9rem; }
+  .form-wrapper { padding: 25px; }
+}
+
+// ==========================================================================
+// ── PERFILES DE LOS PROFESIONALES (Premium UI) ────────────────────────────
+// ==========================================================================
+
+.prof-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8fafc;
+  padding: 8px 18px 8px 10px;
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #fff;
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.prof-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  flex-shrink: 0;
+}
+
+.prof-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.prof-role {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-forta-primary);
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.prof-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+// Aseguramos que en móviles el header no se rompa
+@media (max-width: 768px) {
+  .form-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .prof-profile {
+    width: 100%;
+    padding: 10px 15px;
+  }
+}

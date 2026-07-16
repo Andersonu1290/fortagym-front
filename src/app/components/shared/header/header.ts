@@ -73,7 +73,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           if (data.rol === 'ADMIN') this.rutaPanel = '/admin/dashboard';
           else if (data.rol === 'ENTRENADOR') this.rutaPanel = '/entrenador/dashboard';
           else if (data.rol === 'NUTRICIONISTA') this.rutaPanel = '/nutricion/dashboard';
-          else this.rutaPanel = '/usuario';
+          else this.rutaPanel = '/mis-planes'; // Usuario normal
         },
         error: () => {
           this.cerrarSesion(); // Si el token falló o caducó, limpiamos todo

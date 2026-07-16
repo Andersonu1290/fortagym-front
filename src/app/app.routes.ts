@@ -28,6 +28,7 @@ import { GestionHorariosNutriComponent } from './components/dashboard/nutricioni
 import { NutricionistaUsuarios } from './components/dashboard/nutricionista/nutricion-usuarios/nutricion-usuarios';
 import { AdminPedidosComponent } from './components/dashboard/admin/pedidos/pedidos';
 import { ReporteGeneralComponent } from './components/reporteGeneral/ReporteGeneral';
+import { MisPlanesComponent } from './components/dashboard/usuario/mis-planes/mis-planes';
 
 export const routes: Routes = [
   // ==========================================
@@ -57,6 +58,8 @@ export const routes: Routes = [
 
   // Dashboard de Cliente / Socio
   { path: 'usuario', component: Usuario, canActivate: [authGuard] },
+
+  { path: 'mis-planes', component: MisPlanesComponent, canActivate: [authGuard] },
 
   // Dashboard Administrativo
   { path: 'admin/dashboard', component: Admin, canActivate: [authGuard] },
