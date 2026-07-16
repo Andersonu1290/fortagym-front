@@ -158,13 +158,14 @@
 
           <div class="g2">
 
-            <!-- Nombre -->
             <div class="fg">
               <label class="flbl">Nombre</label>
               <input
                 type="text"
                 class="finp"
                 [class.input-error]="errores['nombre']"
+                [class.skeleton]="cargandoDatos"
+                [readonly]="cargandoDatos"
                 placeholder="Tu nombre"
                 [value]="nombre"
                 (input)="onSoloLetras($event, 'nombre')"
@@ -173,13 +174,14 @@
               <span class="err-msg" *ngIf="errores['nombre']">{{ errores['nombre'] }}</span>
             </div>
 
-            <!-- Apellido -->
             <div class="fg">
               <label class="flbl">Apellido</label>
               <input
                 type="text"
                 class="finp"
                 [class.input-error]="errores['apellido']"
+                [class.skeleton]="cargandoDatos"
+                [readonly]="cargandoDatos"
                 placeholder="Tu apellido"
                 [value]="apellido"
                 (input)="onSoloLetras($event, 'apellido')"
@@ -192,13 +194,14 @@
 
           <div class="g2">
 
-            <!-- DNI -->
             <div class="fg">
               <label class="flbl">DNI</label>
               <input
                 type="text"
                 class="finp"
                 [class.input-error]="errores['dni']"
+                [class.skeleton]="cargandoDatos"
+                [readonly]="cargandoDatos"
                 placeholder="00000000"
                 [value]="dni"
                 (input)="onDni($event)"
@@ -208,13 +211,14 @@
               <span class="err-msg" *ngIf="errores['dni']">{{ errores['dni'] }}</span>
             </div>
 
-            <!-- Teléfono -->
             <div class="fg">
               <label class="flbl">Teléfono</label>
               <input
                 type="text"
                 class="finp"
                 [class.input-error]="errores['telefono']"
+                [class.skeleton]="cargandoDatos"
+                [readonly]="cargandoDatos"
                 placeholder="+51 999 999 999"
                 [value]="telefono"
                 (focus)="onTelefonoFocus($event)"
@@ -227,13 +231,14 @@
 
           </div>
 
-          <!-- Email -->
           <div class="fg">
             <label class="flbl">Correo electrónico</label>
             <input
               type="email"
               class="finp"
               [class.input-error]="errores['email']"
+              [class.skeleton]="cargandoDatos"
+              [readonly]="cargandoDatos"
               placeholder="correo@ejemplo.com"
               [(ngModel)]="email"
               maxlength="100"

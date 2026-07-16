@@ -37,6 +37,7 @@ export class MembresiaComponent implements OnInit {
   planSeleccionado!: PlanMembresia;
   metodoPago: 'tarjeta' | 'yape' = 'tarjeta';
   terminosAceptados: boolean = false;
+  cargandoDatos: boolean = true;
 
   // ── Campos del formulario ──────────────────────────────────────────────────
   nombre        = '';
@@ -119,6 +120,7 @@ export class MembresiaComponent implements OnInit {
     ];
 
     this.planSeleccionado = this.planes[0];
+    this.cargarDatosUsuario();
   }
 
   // ── Selección de plan ──────────────────────────────────────────────────────
@@ -172,26 +174,33 @@ export class MembresiaComponent implements OnInit {
    * El prefijo +51 se muestra siempre; el usuario solo escribe los 9 dígitos.
    */
   onTelefono(event: Event, campo: 'telefono' | 'telefonoYape'): void {
-    const input  = event.target as HTMLInputElement;
-    // Extraer solo dígitos del valor actual (sin el prefijo)
-    let digitos  = input.value.replace(/\D/g, '');
+    const input = event.target as HTMLInputElement;
 
-    // Si el usuario escribió "51" al inicio (pegó el número completo) lo quitamos
-    if (digitos.startsWith('51') && digitos.length > 9) {
-      digitos = digitos.slice(2);
+    // 1. Obtenemos solo los números, ignorando el prefijo "+51 "
+    let rawValue = input.value.replace('+51 ', '').replace(/\D/g, '');
+
+    // 2. Limitamos a máximo 9 dígitos
+    rawValue = rawValue.substring(0, 9);
+
+    // 3. Formateamos: 999 999 999
+    let formatted = '';
+    if (rawValue.length > 0) {
+      formatted = rawValue.substring(0, 3);
+      if (rawValue.length > 3) formatted += ' ' + rawValue.substring(3, 6);
+      if (rawValue.length > 6) formatted += ' ' + rawValue.substring(6, 9);
     }
 
-    digitos = digitos.slice(0, 9);
+    // 4. Construimos el valor final con el prefijo
+    const finalValue = rawValue.length > 0 ? '+51 ' + formatted : '';
 
-    // Formatear: 999 999 999
-    let formateado = '';
-    if (digitos.length > 0) formateado  = digitos.slice(0, 3);
-    if (digitos.length > 3) formateado += ' ' + digitos.slice(3, 6);
-    if (digitos.length > 6) formateado += ' ' + digitos.slice(6, 9);
+    // 5. ACTUALIZACIÓN SEGURA:
+    // Actualizamos la variable del componente
+    this[campo] = finalValue;
 
-    const valorFinal = digitos.length > 0 ? '+51 ' + formateado : '';
-    this[campo]  = valorFinal;
-    input.value   = valorFinal;
+    // Solo actualizamos el DOM si el valor es diferente para evitar el parpadeo/loop
+    if (input.value !== finalValue) {
+      input.value = finalValue;
+    }
   }
 
   /** Coloca el cursor al final si el usuario hace click cuando el campo tiene +51 */
@@ -363,5 +372,24 @@ export class MembresiaComponent implements OnInit {
           alert('Hubo un error al procesar tu pago. Revisa la consola.');
         }
       });
+  }
+
+  cargarDatosUsuario(): void {
+    setTimeout(() => {
+      this.http.get<any>(`${environment.apiUrl}/api/usuarios/perfil`).subscribe({
+        next: (usuario) => {
+          this.nombre   = usuario.nombre || '';
+          this.apellido = usuario.apellido || '';
+          this.email    = usuario.email || '';
+          this.dni      = usuario.dni || '';
+          this.telefono = usuario.telefono || '';
+          this.cargandoDatos = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar datos:', err);
+          this.cargandoDatos = false;
+        }
+      });
+    }, 800);
   }
 }

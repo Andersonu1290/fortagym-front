@@ -18,11 +18,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   // PRODUCTOS PÚBLICOS
+  // Productos públicos
   if (
-    req.url.includes('/api/productos') &&
+    req.url.endsWith('/api/productos') &&
     req.method === 'GET'
   ) {
     isPublic = true;
+  }
+
+  // Productos eliminados NO son públicos
+  if (req.url.includes('/api/productos/eliminados')) {
+    isPublic = false;
   }
 
   // 🔥 PROMOCIONES PÚBLICAS

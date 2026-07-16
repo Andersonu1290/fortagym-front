@@ -1,0 +1,216 @@
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero-banner">
+    <div class="hero-stripe"></div>
+
+    <div class="hero-text">
+      <a class="back-link" routerLink="/admin/dashboard">
+        <i class="ti ti-arrow-left"></i>
+        Dashboard
+      </a>
+
+      <div class="hero-title">
+        Productos <span>Eliminados</span>
+      </div>
+
+      <div class="hero-sub">
+        Administra y restaura los productos eliminados de la tienda FortaGym.
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-chip">
+        <div class="num">{{ metricas.total }}</div>
+        <div class="lbl">Eliminados</div>
+      </div>
+
+      <div class="stat-chip">
+        <div class="num">{{ metricas.agotados }}</div>
+        <div class="lbl">Sin stock</div>
+      </div>
+
+      <div class="stat-chip">
+        <div class="num">S/. {{ metricas.valor | number:'1.2-2' }}</div>
+        <div class="lbl">Valor</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÉTRICAS -->
+  <div class="metrics-row">
+
+    <div class="metric-card">
+      <div class="metric-icon mi-red">
+        <i class="ti ti-trash"></i>
+      </div>
+
+      <div>
+        <div class="metric-val">{{ metricas.total }}</div>
+        <div class="metric-lbl">Eliminados</div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon mi-dark">
+        <i class="ti ti-tag"></i>
+      </div>
+
+      <div>
+        <div class="metric-val">{{ metricas.categorias }}</div>
+        <div class="metric-lbl">Categorías</div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon mi-orange">
+        <i class="ti ti-package"></i>
+      </div>
+
+      <div>
+        <div class="metric-val">{{ metricas.agotados }}</div>
+        <div class="metric-lbl">Sin stock</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BUSCADOR -->
+  <div class="controls-row">
+
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+
+      <input
+        type="text"
+        placeholder="Buscar productos eliminados..."
+        [(ngModel)]="textoBusqueda"
+        (input)="aplicarFiltros()">
+    </div>
+
+    <div class="filter-pills">
+
+      <button
+        class="pill-btn"
+        [class.active]="filtroCategoria === 'Todos'"
+        (click)="seleccionarCategoria('Todos')">
+        Todos
+      </button>
+
+      <button
+        class="pill-btn"
+        [class.active]="filtroCategoria === 'SUPLEMENTOS'"
+        (click)="seleccionarCategoria('SUPLEMENTOS')">
+        Suplementos
+      </button>
+
+      <button
+        class="pill-btn"
+        [class.active]="filtroCategoria === 'ROPA'"
+        (click)="seleccionarCategoria('ROPA')">
+        Ropa
+      </button>
+
+      <button
+        class="pill-btn"
+        [class.active]="filtroCategoria === 'EQUIPOS'"
+        (click)="seleccionarCategoria('EQUIPOS')">
+        Equipos
+      </button>
+
+      <button
+        class="pill-btn"
+        [class.active]="filtroCategoria === 'ACCESORIOS'"
+        (click)="seleccionarCategoria('ACCESORIOS')">
+        Accesorios
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- GRID -->
+  <div class="products-grid">
+
+    <div
+      class="product-card"
+      *ngFor="let p of productosFiltrados">
+
+      <div class="product-img contenedor-imagen-manual">
+
+        <img
+          [src]="getImagenUrl(p.img) || 'https://via.placeholder.com/400x300?text=Sin+Imagen'"
+          [alt]="p.nombre">
+
+        <span class="img-badge agotado">
+          Eliminado
+        </span>
+
+      </div>
+
+      <div class="product-body">
+
+        <div class="product-cat">
+          {{ p.categoria }}
+        </div>
+
+        <div class="product-name">
+          {{ p.nombre }}
+        </div>
+
+        <div class="product-desc">
+          {{ p.descripcion }}
+        </div>
+
+        <div class="product-footer">
+
+          <div class="product-price">
+            S/. {{ p.precio | number:'1.2-2' }}
+          </div>
+
+          <div class="product-stock">
+
+            <span
+              class="stock-dot"
+              [ngClass]="{
+                'dot-out': p.stock === 0,
+                'dot-low': p.stock > 0 && p.stock <= 5,
+                'dot-ok': p.stock > 5
+              }">
+            </span>
+
+            {{ p.stock === 0 ? 'Sin stock' : p.stock + ' en stock' }}
+
+          </div>
+
+        </div>
+
+        <div class="product-actions">
+
+          <button
+            class="btn-edit"
+            (click)="restaurarProducto(p.id)">
+
+            <i class="ti ti-restore"></i>
+
+            Restaurar
+
+          </button>
+
+          <button
+            class="btn-del"
+            (click)="eliminarDefinitivamente(p.id)">
+
+            <i class="ti ti-trash-x"></i>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

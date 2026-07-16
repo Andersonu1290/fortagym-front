@@ -23,4 +23,17 @@ export class ProductoService {
   eliminarProducto(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/eliminar/${id}`);
   }
+
+  // Endpoint para obtener productos eliminados
+    getProductosEliminados(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/eliminados`);
+  }
+
+  restaurarProducto(id: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/restaurar/${id}`, {});
+  }
+
+  eliminarProductoDefinitivo(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/eliminar-definitivo/${id}`);
+  }
 }

@@ -612,3 +612,20 @@
     margin-left: 0;
   }
 }
+
+/* 🔥 ANIMACIÓN SKELETON (Copia esto al final) */
+.skeleton {
+  background: #e2e8f0 !important;
+  color: transparent !important;
+  border-color: transparent !important;
+  pointer-events: none;
+  animation: pulse 1.5s infinite ease-in-out;
+
+  &::placeholder { color: transparent !important; }
+}
+
+@keyframes pulse {
+  0% { background-color: #e2e8f0; }
+  50% { background-color: #cbd5e1; }
+  100% { background-color: #e2e8f0; }
+}
