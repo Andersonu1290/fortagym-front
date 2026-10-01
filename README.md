@@ -32,6 +32,20 @@ El sistema está dividido en múltiples módulos según el rol del usuario (Aute
 
 Sigue estos pasos para ejecutar el proyecto en tu entorno local:
 
+## 👥 Usuarios de Prueba y Roles
+
+Para facilitar la revisión y pruebas de las distintas funcionalidades y niveles de acceso (RBAC), puedes iniciar sesión utilizando las siguientes credenciales. 
+
+> 🔑 **Nota:** La contraseña para **todos** los usuarios de prueba es **`123456`** *(en la base de datos se encuentra encriptada mediante BCrypt)*.
+
+| Nombre | Rol | Correo Electrónico | Contraseña |
+| :--- | :--- | :--- | :--- |
+| **Anderson Urrutia** | `ADMIN` | admin@fortagym.com | `123456` |
+| **Carlos Mendoza** | `ENTRENADOR` | entrenador@fortagym.com | `123456` |
+| **Valeria Salas** | `NUTRICIONISTA` | nutricion@fortagym.com | `123456` |
+| **Juan Pablo Torres** | `USUARIO` (Cliente) | juanpablo@gmail.com | `123456` |
+
+
 ### 1. Prerrequisitos
 Asegúrate de tener instalado [Node.js](https://nodejs.org/) (recomendado v18 o superior) y el CLI de Angular.
 ```bash
